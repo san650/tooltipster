@@ -1,8 +1,13 @@
 {
   "name": "tooltipster",
-  "version": "3.2.6",
-  "main": ["js/jquery.tooltipster.min.js", "css/tooltipster.css"],
+  "version": "3.2.6.1",
+  "main": ["js/jquery.tooltipster.js", "css/tooltipster.css"],
   "dependencies": {
     "jquery": ">=1.7"
-  }
+  },
+  "ignore": [
+    "**/.*",
+    "bower.json",
+    "demo"
+  ]
 }
