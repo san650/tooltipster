@@ -48,7 +48,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       theme: 'tooltipster-default',
       touchDevices: true,
       trigger: 'hover',
-      updateAnimation: true
+      updateAnimation: true,
+      container: 'body'
     };
 
   function Plugin(element, options) {
@@ -324,7 +325,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             self._content_insert();
 
             // attach
-            self.$tooltip.appendTo('body');
+            self.$tooltip.appendTo(self.options.container);
 
             // do all the crazy calculations and positioning
             self.reposition();
