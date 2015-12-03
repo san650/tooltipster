@@ -305,8 +305,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             var extraTime = self.options.speed;
 
             // disable horizontal scrollbar to keep overflowing tooltips from jacking with it and then restore it to its previous value
-            self.bodyOverflowX = $('body').css('overflow-x');
-            $('body').css('overflow-x', 'hidden');
+            self.bodyOverflowX = $(self.options.container).css('overflow-x');
+            $(self.options.container).css('overflow-x', 'hidden');
 
             // get some other settings related to building the tooltip
             var animation = 'tooltipster-' + self.options.animation,
@@ -358,7 +358,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             if (self.options.autoClose) {
 
               // in case a listener is already bound for autoclosing (mouse or touch, hover or click), unbind it first
-              $('body').off('.'+ self.namespace);
+              $(self.options.container).off('.'+ self.namespace);
 
               // here we'll have to set different sets of bindings for both touch and mouse
               if (self.options.trigger == 'hover') {
@@ -368,7 +368,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                   // timeout 0 : explanation below in click section
                   setTimeout(function() {
                     // we don't want to bind on click here because the initial touchstart event has not yet triggered its click event, which is thus about to happen
-                    $('body').on('touchstart.'+ self.namespace, function() {
+                    $(self.options.container).on('touchstart.'+ self.namespace, function() {
                       self.hide();
                     });
                   }, 0);
@@ -412,7 +412,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
                 // use a timeout to prevent immediate closing if the method was called on a click event and if options.delay == 0 (because of bubbling)
                 setTimeout(function() {
-                  $('body').on('click.'+ self.namespace +' touchstart.'+ self.namespace, function() {
+                  $(self.options.container).on('click.'+ self.namespace +' touchstart.'+ self.namespace, function() {
                     self.hide();
                   });
                 }, 0);
@@ -450,13 +450,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         // if the tooltip and/or its interval should be stopped
         if (
             // if the origin has been removed
-            $('body').find(self.$el).length === 0
+            $(self.options.container).find(self.$el).length === 0
             // if the elProxy has been removed
-          ||  $('body').find(self.$elProxy).length === 0
+          ||  $(self.options.container).find(self.$elProxy).length === 0
             // if the tooltip has been closed
           ||  self.Status == 'hidden'
             // if the tooltip has somehow been removed
-          ||  $('body').find(self.$tooltip).length === 0
+          ||  $(self.options.container).find(self.$tooltip).length === 0
         ) {
           // remove the tooltip if it's still here
           if (self.Status == 'shown' || self.Status == 'appearing') self.hide();
@@ -647,13 +647,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           // unbind orientationchange, scroll and resize listeners
           $(window).off('.'+ self.namespace);
 
-          $('body')
+          $(self.options.container)
             // unbind any auto-closing click/touch listeners
             .off('.'+ self.namespace)
             .css('overflow-x', self.bodyOverflowX);
 
           // unbind any auto-closing click/touch listeners
-          $('body').off('.'+ self.namespace);
+          $(self.options.container).off('.'+ self.namespace);
 
           // unbind any auto-closing hover listeners
           self.$elProxy.off('.'+ self.namespace + '-autoClose');
@@ -718,7 +718,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       var self = this;
 
       // in case the tooltip has been removed from DOM manually
-      if ($('body').find(self.$tooltip).length !== 0) {
+      if ($(self.options.container).find(self.$tooltip).length !== 0) {
 
         // reset width
         self.$tooltip.css('width', '');
