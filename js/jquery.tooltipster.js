@@ -43,6 +43,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       onlyOne: false,
       position: 'top',
       positionTracker: false,
+      forcePosition: false,
       speed: 350,
       timer: 0,
       theme: 'tooltipster-default',
@@ -824,36 +825,40 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           offsetX = parseInt(self.options.offsetX),
           // this is the arrow position that will eventually be used. It may differ from the position option if the tooltip cannot be displayed in this position
           practicalPosition = self.options.position;
+          forcePosition = self.options.forcePosition;
 
         // a function to detect if the tooltip is going off the screen horizontally. If so, reposition the crap out of it!
         function dontGoOffScreenX() {
+          if (!forcePosition) {
+            var windowLeft = $(window).scrollLeft();
 
-          var windowLeft = $(window).scrollLeft();
+            // if the tooltip goes off the left side of the screen, line it up with the left side of the window
+            if((myLeft - windowLeft) < 0) {
+              arrowReposition = myLeft - windowLeft;
+              myLeft = windowLeft;
+            }
 
-          // if the tooltip goes off the left side of the screen, line it up with the left side of the window
-          if((myLeft - windowLeft) < 0) {
-            arrowReposition = myLeft - windowLeft;
-            myLeft = windowLeft;
-          }
-
-          // if the tooltip goes off the right of the screen, line it up with the right side of the window
-          if (((myLeft + tooltipWidth) - windowLeft) > windowWidth) {
-            arrowReposition = myLeft - ((windowWidth + windowLeft) - tooltipWidth);
-            myLeft = (windowWidth + windowLeft) - tooltipWidth;
+            // if the tooltip goes off the right of the screen, line it up with the right side of the window
+            if (((myLeft + tooltipWidth) - windowLeft) > windowWidth) {
+              arrowReposition = myLeft - ((windowWidth + windowLeft) - tooltipWidth);
+              myLeft = (windowWidth + windowLeft) - tooltipWidth;
+            }
           }
         }
 
         // a function to detect if the tooltip is going off the screen vertically. If so, switch to the opposite!
         function dontGoOffScreenY(switchTo, switchFrom) {
-          // if it goes off the top off the page
-          if(((proxy.offset.top - $(window).scrollTop() - tooltipHeight - offsetY - 12) < 0) && (switchFrom.indexOf('top') > -1)) {
-            practicalPosition = switchTo;
-          }
+          if (!forcePosition) {
+            // if it goes off the top off the page
+            if(((proxy.offset.top - $(window).scrollTop() - tooltipHeight - offsetY - 12) < 0) && (switchFrom.indexOf('top') > -1)) {
+              practicalPosition = switchTo;
+            }
 
-          // if it goes off the bottom of the page
-          if (((proxy.offset.top + proxy.dimension.height + tooltipHeight + 12 + offsetY) > ($(window).scrollTop() + $(window).height())) && (switchFrom.indexOf('bottom') > -1)) {
-            practicalPosition = switchTo;
-            myTop = (proxy.offset.top - tooltipHeight) - offsetY - 12;
+            // if it goes off the bottom of the page
+            if (((proxy.offset.top + proxy.dimension.height + tooltipHeight + 12 + offsetY) > ($(window).scrollTop() + $(window).height())) && (switchFrom.indexOf('bottom') > -1)) {
+              practicalPosition = switchTo;
+              myTop = (proxy.offset.top - tooltipHeight) - offsetY - 12;
+            }
           }
         }
 
